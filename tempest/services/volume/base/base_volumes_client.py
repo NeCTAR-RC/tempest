@@ -89,6 +89,8 @@ class BaseVolumesClient(rest_client.RestClient):
         """
         if 'size' not in kwargs:
             kwargs['size'] = self.default_volume_size
+        if 'availability_zone' not in kwargs and self.availability_zone:
+            kwargs['availability_zone'] = self.availability_zone
         post_body = json.dumps({'volume': kwargs})
         resp, body = self.post('volumes', post_body)
         body = json.loads(body)

@@ -363,7 +363,8 @@ class Manager(manager.Manager):
             'region': CONF.compute.region or CONF.identity.region,
             'endpoint_type': CONF.compute.endpoint_type,
             'build_interval': CONF.compute.build_interval,
-            'build_timeout': CONF.compute.build_timeout
+            'build_timeout': CONF.compute.build_timeout,
+            'availability_zone': CONF.compute.availability_zone
         }
         params.update(self.default_params)
 
@@ -427,6 +428,7 @@ class Manager(manager.Manager):
         # NOTE: The following client needs special timeout values because
         # the API is a proxy for the other component.
         params_volume = copy.deepcopy(params)
+        params_volume['availability_zone'] = CONF.volume.availability_zone
         params_volume.update({
             'build_interval': CONF.volume.build_interval,
             'build_timeout': CONF.volume.build_timeout
@@ -532,7 +534,8 @@ class Manager(manager.Manager):
             'region': CONF.volume.region or CONF.identity.region,
             'endpoint_type': CONF.volume.endpoint_type,
             'build_interval': CONF.volume.build_interval,
-            'build_timeout': CONF.volume.build_timeout
+            'build_timeout': CONF.volume.build_timeout,
+            'availability_zone': CONF.volume.availability_zone
         }
         params.update(self.default_params)
 

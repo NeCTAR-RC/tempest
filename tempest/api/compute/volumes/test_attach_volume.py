@@ -51,6 +51,11 @@ class AttachVolumeTestJSON(base.BaseV2ComputeTest):
         super(AttachVolumeTestJSON, cls).resource_setup()
         cls.device = CONF.compute.volume_device_name
 
+    @classmethod
+    def setup_clients(cls):
+        super(AttachVolumeTestJSON, cls).setup_clients()
+        cls.volumes_client = cls.volumes_extensions_client
+
     def _detach(self, server_id, volume_id):
         if self.attachment:
             self.servers_client.detach_volume(server_id, volume_id)
