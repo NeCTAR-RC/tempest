@@ -20,7 +20,7 @@ class ServiceClient(rest_client.RestClient):
     def __init__(self, auth_provider, service, region,
                  endpoint_type=None, build_interval=None, build_timeout=None,
                  disable_ssl_certificate_validation=None, ca_certs=None,
-                 trace_requests=None):
+                 trace_requests=None, availability_zone=None):
 
         dscv = disable_ssl_certificate_validation
         params = {

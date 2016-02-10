@@ -219,6 +219,9 @@ compute_group = cfg.OptGroup(name='compute',
                              title='Compute Service Options')
 
 ComputeGroup = [
+    cfg.StrOpt('availability_zone',
+               help="Availability zone to be used in tests. "
+                    "This is a required option"),
     cfg.StrOpt('image_ref',
                help="Valid primary image reference to be used in tests. "
                     "This is a required option"),
@@ -706,6 +709,9 @@ volume_group = cfg.OptGroup(name='volume',
                             title='Block Storage Options')
 
 VolumeGroup = [
+    cfg.StrOpt('availability_zone',
+               help="Availability zone to be used in tests. "
+                    "This is a required option"),
     cfg.IntOpt('build_interval',
                default=1,
                help='Time in seconds between volume availability checks.'),
