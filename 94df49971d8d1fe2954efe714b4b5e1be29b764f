@@ -22,6 +22,30 @@
       "revId": "94df49971d8d1fe2954efe714b4b5e1be29b764f",
       "serverId": "f182a8af-62ca-4ceb-ab81-14f8fec9c6c5",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bad4c104_fb3b2836",
+        "filename": "tempest/config.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 1000077
+      },
+      "writtenOn": "2016-02-11T02:58:06Z",
+      "side": 1,
+      "message": "This is part of Jake\u0027s patch. Let\u0027s get it in, then work on it from there. I\u0027ll want to remove this to attempt to get it upstream",
+      "parentUuid": "bad4c104_5bb6d4dd",
+      "range": {
+        "startLine": 222,
+        "startChar": 0,
+        "endLine": 224,
+        "endChar": 49
+      },
+      "revId": "94df49971d8d1fe2954efe714b4b5e1be29b764f",
+      "serverId": "f182a8af-62ca-4ceb-ab81-14f8fec9c6c5",
+      "unresolved": false
     }
   ]
 }
