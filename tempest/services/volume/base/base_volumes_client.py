@@ -32,6 +32,8 @@ class BaseVolumesClient(service_client.ServiceClient):
         super(BaseVolumesClient, self).__init__(
             auth_provider, service, region, **kwargs)
         self.default_volume_size = default_volume_size
+        # (andybotting) Hack to get AZ here. I'm sure this isn't the right way
+        self.availability_zone = kwargs.get('availability_zone')
 
     def get_attachment_from_volume(self, volume):
         """Return the element 'attachment' from input volumes."""
