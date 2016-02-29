@@ -12,11 +12,11 @@
 
 import os.path
 
-from tempest_lib import exceptions as lib_exc
 import yaml
 
 from tempest.common.utils import data_utils
 from tempest import config
+from tempest.lib import exceptions as lib_exc
 import tempest.test
 
 CONF = config.CONF
@@ -32,6 +32,12 @@ class BaseOrchestrationTest(tempest.test.BaseTestCase):
         super(BaseOrchestrationTest, cls).skip_checks()
         if not CONF.service_available.heat:
             raise cls.skipException("Heat support is required")
+
+    @classmethod
+    def setup_credentials(cls):
+        super(BaseOrchestrationTest, cls).setup_credentials()
+        stack_owner_role = CONF.orchestration.stack_owner_role
+        cls.os = cls.get_client_manager(roles=[stack_owner_role])
 
     @classmethod
     def setup_clients(cls):

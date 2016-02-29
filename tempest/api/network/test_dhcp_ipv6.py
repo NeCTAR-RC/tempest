@@ -17,11 +17,11 @@ import netaddr
 import random
 
 import six
-from tempest_lib import exceptions as lib_exc
 
 from tempest.api.network import base
 from tempest.common.utils import data_utils
 from tempest import config
+from tempest.lib import exceptions as lib_exc
 from tempest import test
 
 CONF = config.CONF
@@ -66,8 +66,8 @@ class NetworksTestDHCPv6(base.BaseNetworkTest):
         body = self.ports_client.list_ports()
         ports = body['ports']
         for port in ports:
-            if (port['device_owner'].startswith('network:router_interface')
-                and port['device_id'] in [r['id'] for r in self.routers]):
+            if (port['device_owner'].startswith('network:router_interface') and
+                port['device_id'] in [r['id'] for r in self.routers]):
                 self.client.remove_router_interface(port['device_id'],
                                                     port_id=port['id'])
             else:

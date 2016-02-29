@@ -31,7 +31,6 @@ from tempest.services.identity.v3.json import regions_client
 from tempest.services.identity.v3.json import services_client
 from tempest.services.image.v1.json import images_client
 from tempest.services.image.v2.json import images_client as images_v2_client
-from tempest.services.messaging.json import messaging_client
 from tempest.services.network.json import network_client
 from tempest.services.object_storage import account_client
 from tempest.services.object_storage import container_client
@@ -79,14 +78,13 @@ from tempest.tests import base
 
 class TestServiceClient(base.TestCase):
 
-    @mock.patch('tempest_lib.common.rest_client.RestClient.__init__')
+    @mock.patch('tempest.lib.common.rest_client.RestClient.__init__')
     def test_service_client_creations_with_specified_args(self, mock_init):
         test_clients = [
             baremetal_client.BaremetalClient,
             data_processing_client.DataProcessingClient,
             db_flavor_client.DatabaseFlavorsClient,
             db_version_client.DatabaseVersionsClient,
-            messaging_client.MessagingClient,
             network_client.NetworkClient,
             account_client.AccountClient,
             container_client.ContainerClient,
