@@ -164,7 +164,7 @@ server_detail['properties'].update({
     # attributes.
     'OS-SRV-USG:launched_at': {'type': ['string', 'null']},
     'OS-SRV-USG:terminated_at': {'type': ['string', 'null']},
-    'OS-EXT-AZ:availability_zone': {'type': 'string'},
+    'OS-EXT-AZ:availability_zone': {'type': ['string', 'null']},
 
     # NOTE: Admin users only can see "OS-EXT-STS" and "OS-EXT-SRV-ATTR"
     # attributes.
