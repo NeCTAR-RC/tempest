@@ -75,7 +75,15 @@ def get_server_ip(server, validation_resources=None):
                    'validation_resources cannot be None')
             raise lib_exc.InvalidParam(invalid_param=msg)
     elif CONF.validation.connect_method == 'fixed':
-        addresses = server['addresses'][CONF.validation.network_for_ssh]
+        if CONF.validation.network_for_ssh in server['addresses']:
+            addresses = server['addresses'][
+                CONF.validation.network_for_ssh]
+        else:
+            access = 'accessIPv%d' % CONF.validation.ip_version_for_ssh
+            address = server.get(access)
+            if address:
+                return address
+
         for address in addresses:
             if address['version'] == CONF.validation.ip_version_for_ssh:
                 return address['addr']
