@@ -622,10 +622,16 @@ class ScenarioTest(tempest.test.BaseTestCase):
             # method is creating the floating IP there.
             return self.create_floating_ip(server)['ip']
         elif CONF.validation.connect_method == 'fixed':
-            addresses = server['addresses'][CONF.validation.network_for_ssh]
-            for address in addresses:
-                if address['version'] == CONF.validation.ip_version_for_ssh:
-                    return address['addr']
+            if CONF.validation.network_for_ssh in server['addresses']:
+                addrs = server['addresses'][CONF.validation.network_for_ssh]
+                for addr in addresses:
+                    if addr['version'] == CONF.validation.ip_version_for_ssh:
+                        return addr['addr']
+            else:
+                access = 'accessIPv%d' % CONF.validation.ip_version_for_ssh
+                address = server.get(access)
+                if address:
+                    return address
             raise exceptions.ServerUnreachable(server_id=server['id'])
         else:
             raise exceptions.InvalidConfiguration()
@@ -1258,8 +1264,13 @@ class BaremetalScenarioTest(ScenarioTest):
                 return True
             return False
 
+<<<<<<< HEAD
         if not test_utils.call_until_true(
             check_state, timeout, interval):
+=======
+        if not tempest.test.call_until_true(
+                check_state, timeout, interval):
+>>>>>>> 6f75a83... Fix for fetching accessIPv4 value if the "site" is not set.
             msg = ("Timed out waiting for node %s to reach %s state(s) %s" %
                    (node_id, state_attr, target_states))
             raise exceptions.TimeoutException(msg)
