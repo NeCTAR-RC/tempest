@@ -13,7 +13,6 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import netaddr
 import testtools
 
 from tempest.api.compute import base
@@ -46,8 +45,6 @@ class ServersTestJSON(base.BaseV2ComputeTest):
         validation_resources = cls.get_class_validation_resources(
             cls.os_primary)
         cls.meta = {'hello': 'world'}
-        cls.accessIPv4 = '1.1.1.1'
-        cls.accessIPv6 = '0000:0000:0000:0000:0000:babe:220.12.22.2'
         cls.name = data_utils.rand_name(cls.__name__ + '-server')
         cls.password = data_utils.rand_password()
         disk_config = cls.disk_config
@@ -57,8 +54,6 @@ class ServersTestJSON(base.BaseV2ComputeTest):
             wait_until='ACTIVE',
             name=cls.name,
             metadata=cls.meta,
-            accessIPv4=cls.accessIPv4,
-            accessIPv6=cls.accessIPv6,
             disk_config=disk_config,
             adminPass=cls.password,
             volume_backed=cls.volume_backed)
@@ -69,11 +64,6 @@ class ServersTestJSON(base.BaseV2ComputeTest):
     @decorators.idempotent_id('5de47127-9977-400a-936f-abcfbec1218f')
     def test_verify_server_details(self):
         # Verify the specified server attributes are set correctly
-        self.assertEqual(self.accessIPv4, self.server['accessIPv4'])
-        # NOTE(maurosr): See http://tools.ietf.org/html/rfc5952 (section 4)
-        # Here we compare directly with the canonicalized format.
-        self.assertEqual(self.server['accessIPv6'],
-                         str(netaddr.IPAddress(self.accessIPv6)))
         self.assertEqual(self.name, self.server['name'])
         if self.volume_backed:
             # Image is an empty string as per documentation
