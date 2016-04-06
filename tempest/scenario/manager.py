@@ -791,8 +791,14 @@ class ScenarioTest(tempest.test.BaseTestCase):
             # Determine the network name to look for based on config or creds
             # provider network resources.
             if CONF.validation.network_for_ssh:
-                addresses = server['addresses'][
-                    CONF.validation.network_for_ssh]
+                if CONF.validation.network_for_ssh in server['addresses']:
+                    addresses = server['addresses'][
+                        CONF.validation.network_for_ssh]
+                else:
+                    access = 'accessIPv%d' % CONF.validation.ip_version_for_ssh
+                    address = server.get(access)
+                    if address:
+                        return address
             else:
                 network = self.get_tenant_network()
                 addresses = (server['addresses'][network['name']]
