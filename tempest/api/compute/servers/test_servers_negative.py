@@ -95,25 +95,6 @@ class ServersNegativeTestJSON(base.BaseV2ComputeTest):
                           self.create_test_server,
                           flavor=-1,)
 
-    @test.attr(type=['negative'])
-    @test.idempotent_id('7f70a4d1-608f-4794-9e56-cb182765972c')
-    def test_invalid_access_ip_v4_address(self):
-        # An access IPv4 address must match a valid address pattern
-
-        IPv4 = '1.1.1.1.1.1'
-        self.assertRaises(lib_exc.BadRequest,
-                          self.create_test_server, accessIPv4=IPv4)
-
-    @test.attr(type=['negative'])
-    @test.idempotent_id('5226dd80-1e9c-4d8a-b5f9-b26ca4763fd0')
-    def test_invalid_ip_v6_address(self):
-        # An access IPv6 address must match a valid address pattern
-
-        IPv6 = 'notvalid'
-
-        self.assertRaises(lib_exc.BadRequest,
-                          self.create_test_server, accessIPv6=IPv6)
-
     @test.idempotent_id('7ea45b3e-e770-46fa-bfcc-9daaf6d987c0')
     @testtools.skipUnless(CONF.compute_feature_enabled.resize,
                           'Resize not available.')
