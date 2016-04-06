@@ -372,10 +372,16 @@ class BaseV2ComputeTest(api_version_utils.BaseMicroversionTest,
         if CONF.validation.connect_method == 'floating':
             return cls.validation_resources['floating_ip']['ip']
         elif CONF.validation.connect_method == 'fixed':
-            addresses = server['addresses'][CONF.validation.network_for_ssh]
-            for address in addresses:
-                if address['version'] == CONF.validation.ip_version_for_ssh:
-                    return address['addr']
+            if CONF.validation.network_for_ssh in server['addresses']:
+                addrs = server['addresses'][CONF.validation.network_for_ssh]
+                for addr in addrs:
+                    if addr['version'] == CONF.validation.ip_version_for_ssh:
+                        return addr['addr']
+            else:
+                access = 'accessIPv%d' % CONF.validation.ip_version_for_ssh
+                address = server.get(access)
+                if address:
+                    return address
             raise exceptions.ServerUnreachable(server_id=server['id'])
         else:
             raise lib_exc.InvalidConfiguration()
