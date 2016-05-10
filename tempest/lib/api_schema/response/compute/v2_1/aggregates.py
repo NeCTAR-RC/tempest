@@ -22,7 +22,7 @@ aggregate_for_create = {
         'created_at': {'type': 'string'},
         'deleted': {'type': 'boolean'},
         'deleted_at': {'type': ['string', 'null']},
-        'id': {'type': 'integer'},
+        'id': {'type': 'string'},
         'name': {'type': 'string'},
         'updated_at': {'type': ['string', 'null']}
     },
