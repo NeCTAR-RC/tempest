@@ -24,7 +24,7 @@ aggregate_for_create = {
         'created_at': parameter_types.date_time,
         'deleted': {'type': 'boolean'},
         'deleted_at': parameter_types.date_time_or_null,
-        'id': {'type': 'integer'},
+        'id': {'type': 'string'},
         'name': {'type': 'string'},
         'updated_at': parameter_types.date_time_or_null
     },

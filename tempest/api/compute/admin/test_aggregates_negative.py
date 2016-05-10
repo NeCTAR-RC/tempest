@@ -37,10 +37,17 @@ class AggregatesAdminNegativeTestJSON(base.BaseV2ComputeAdminTest):
         hosts_all = cls.os_admin.hosts_client.list_hosts()['hosts']
         hosts = ([host['host_name']
                  for host in hosts_all if host['service'] == 'compute'])
-        cls.host = hosts[0]
+        cell_host = hosts[0].split('@')
+        if len(cell_host) == 2:
+            cls.host = cell_host[1]
+            cls.cell = cell_host[0] + '@'
+        else:
+            cls.host = hosts[0]
+            cls.cell = ''
 
     def _create_test_aggregate(self):
-        aggregate_name = data_utils.rand_name(self.aggregate_name_prefix)
+        aggregate_name = self.cell + data_utils.rand_name(
+            self.aggregate_name_prefix)
         aggregate = (self.client.create_aggregate(name=aggregate_name)
                      ['aggregate'])
         self.addCleanup(self.client.delete_aggregate, aggregate['id'])
@@ -111,14 +118,14 @@ class AggregatesAdminNegativeTestJSON(base.BaseV2ComputeAdminTest):
     def test_aggregate_delete_with_invalid_id(self):
         # Delete an aggregate with invalid id should raise exceptions.
         self.assertRaises(lib_exc.NotFound,
-                          self.client.delete_aggregate, -1)
+                          self.client.delete_aggregate, self.cell + '-1')
 
     @decorators.attr(type=['negative'])
     @decorators.idempotent_id('3c916244-2c46-49a4-9b55-b20bb0ae512c')
     def test_aggregate_get_details_with_invalid_id(self):
         # Get aggregate details with invalid id should raise exceptions.
         self.assertRaises(lib_exc.NotFound,
-                          self.client.show_aggregate, -1)
+                          self.client.show_aggregate, self.cell + '-1')
 
     @decorators.attr(type=['negative'])
     @decorators.idempotent_id('0ef07828-12b4-45ba-87cc-41425faf5711')
@@ -175,6 +182,5 @@ class AggregatesAdminNegativeTestJSON(base.BaseV2ComputeAdminTest):
     @decorators.idempotent_id('95d6a6fa-8da9-4426-84d0-eec0329f2e4d')
     def test_aggregate_remove_nonexistent_host(self):
         aggregate = self._create_test_aggregate()
-
         self.assertRaises(lib_exc.NotFound, self.client.remove_host,
                           aggregate['id'], host='nonexist_host')
