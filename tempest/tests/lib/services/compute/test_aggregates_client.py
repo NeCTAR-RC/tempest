@@ -29,7 +29,7 @@ class TestAggregatesClient(base.BaseServiceTest):
             "updated_at": None,
             "hosts": [],
             "deleted_at": None,
-            "id": 1,
+            "id": '1',
             "metadata": {}
         }
     }
@@ -43,7 +43,7 @@ class TestAggregatesClient(base.BaseServiceTest):
             "created_at": "2015-07-21T04:11:18.000000",
             "updated_at": None,
             "deleted_at": None,
-            "id": 1
+            "id": '1'
         }
     }
 
@@ -57,7 +57,7 @@ class TestAggregatesClient(base.BaseServiceTest):
             "updated_at": "2015-07-23T05:16:29.000000",
             "hosts": [],
             "deleted_at": None,
-            "id": 1,
+            "id": '1',
             "metadata": {}
         }
     }
@@ -70,7 +70,7 @@ class TestAggregatesClient(base.BaseServiceTest):
         "hosts": [
             "21549b2f665945baaa7101926a00143c"
         ],
-        "id": 1,
+        "id": '1',
         "metadata": {
             "availability_zone": "nova"
         },
