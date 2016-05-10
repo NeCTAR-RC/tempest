@@ -38,6 +38,14 @@ class TestAggregatesBasicOps(manager.ScenarioTest):
         # Use admin client by default
         cls.aggregates_client = cls.os_admin.aggregates_client
         cls.hosts_client = cls.os_admin.hosts_client
+        hosts_all = cls.hosts_client.list_hosts()['hosts']
+        hosts = map(lambda x: x['host_name'],
+                    filter(lambda y: y['service'] == 'compute', hosts_all))
+        cell_host = hosts[0].split('@')
+        if len(cell_host) == 2:
+            cls.cell = cell_host[0] + '@'
+        else:
+            cls.cell = ''
 
     def _create_aggregate(self, **kwargs):
         aggregate = (self.aggregates_client.create_aggregate(**kwargs)
@@ -57,13 +65,14 @@ class TestAggregatesBasicOps(manager.ScenarioTest):
         return computes[0]['host_name']
 
     def _add_host(self, aggregate_id, host):
-        aggregate = (self.aggregates_client.add_host(aggregate_id, host=host)
-                     ['aggregate'])
+        aggregate = (self.aggregates_client.add_host(
+            aggregate_id, host=host.replace(self.cell, ''))['aggregate'])
         self.addCleanup(self._remove_host, aggregate['id'], host)
-        self.assertIn(host, aggregate['hosts'])
+        self.assertIn(host.replace(self.cell, ''), aggregate['hosts'])
 
     def _remove_host(self, aggregate_id, host):
-        aggregate = self.aggregates_client.remove_host(aggregate_id, host=host)
+        aggregate = self.aggregates_client.remove_host(
+            aggregate_id, host=host.replace(self.cell, ''))
         self.assertNotIn(host, aggregate['aggregate']['hosts'])
 
     def _check_aggregate_details(self, aggregate, aggregate_name, azone,
@@ -72,6 +81,7 @@ class TestAggregatesBasicOps(manager.ScenarioTest):
                      ['aggregate'])
         self.assertEqual(aggregate_name, aggregate['name'])
         self.assertEqual(azone, aggregate['availability_zone'])
+        hosts = [host.replace(self.cell, '') for host in hosts]
         self.assertEqual(hosts, aggregate['hosts'])
         for meta_key in metadata:
             self.assertIn(meta_key, aggregate['metadata'])
@@ -91,7 +101,7 @@ class TestAggregatesBasicOps(manager.ScenarioTest):
         aggregate = self.aggregates_client.update_aggregate(
             aggregate['id'], name=aggregate_name,
             availability_zone=availability_zone)['aggregate']
-        self.assertEqual(aggregate['name'], aggregate_name)
+        self.assertEqual(aggregate['name'], self.cell + aggregate_name)
         self.assertEqual(aggregate['availability_zone'], availability_zone)
         return aggregate
 
@@ -101,7 +111,7 @@ class TestAggregatesBasicOps(manager.ScenarioTest):
     def test_aggregate_basic_ops(self):
         self.useFixture(fixtures.LockFixture('availability_zone'))
         az = 'foo_zone'
-        aggregate_name = data_utils.rand_name('aggregate-scenario')
+        aggregate_name = self.cell + data_utils.rand_name('aggregate-scenario')
         aggregate = self._create_aggregate(name=aggregate_name,
                                            availability_zone=az)
 
@@ -109,7 +119,7 @@ class TestAggregatesBasicOps(manager.ScenarioTest):
         self._set_aggregate_metadata(aggregate, metadata)
 
         host = self._get_host_name()
-        self._add_host(aggregate['id'], host)
+        self._add_host(aggregate['id'], host.replace(self.cell, ''))
         self._check_aggregate_details(aggregate, aggregate_name, az, [host],
                                       metadata)
 

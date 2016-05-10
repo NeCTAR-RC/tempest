@@ -52,7 +52,13 @@ class AggregatesAdminTestJSON(base.BaseV2ComputeAdminTest):
                            if (hyper['state'] == 'up' and
                                hyper['status'] == 'enabled')]
         if hosts_available:
-            cls.host = hosts_available[0]
+            cell_host = hosts_available[0].split('@')
+            if len(cell_host) == 2:
+                cls.host = cell_host[1]
+                cls.cell = cell_host[0] + '@'
+            else:
+                cls.host = hosts_available[0]
+                cls.cell = ''
         else:
             msg = "no available compute node found"
             if CONF.compute.hypervisor_type:
@@ -72,7 +78,9 @@ class AggregatesAdminTestJSON(base.BaseV2ComputeAdminTest):
     @decorators.idempotent_id('0d148aa3-d54c-4317-aa8d-42040a475e20')
     def test_aggregate_create_delete(self):
         # Create and delete an aggregate.
-        aggregate = self._create_test_aggregate()
+        aggregate_name = self.cell + data_utils.rand_name(
+            self.aggregate_name_prefix)
+        aggregate = self._create_test_aggregate(name=aggregate_name)
         self.assertIsNone(aggregate['availability_zone'])
 
         self.client.delete_aggregate(aggregate['id'])
@@ -91,7 +99,9 @@ class AggregatesAdminTestJSON(base.BaseV2ComputeAdminTest):
     @decorators.idempotent_id('68089c38-04b1-4758-bdf0-cf0daec4defd')
     def test_aggregate_create_verify_entry_in_list(self):
         # Create an aggregate and ensure it is listed.
-        aggregate = self._create_test_aggregate()
+        aggregate_name = self.cell + data_utils.rand_name(
+            self.aggregate_name_prefix)
+        aggregate = self._create_test_aggregate(name=aggregate_name)
         aggregates = self.client.list_aggregates()['aggregates']
         self.assertIn((aggregate['id'], aggregate['availability_zone']),
                       map(lambda x: (x['id'], x['availability_zone']),
@@ -100,7 +110,9 @@ class AggregatesAdminTestJSON(base.BaseV2ComputeAdminTest):
     @decorators.idempotent_id('36ec92ca-7a73-43bc-b920-7531809e8540')
     def test_aggregate_create_update_metadata_get_details(self):
         # Create an aggregate and ensure its details are returned.
-        aggregate = self._create_test_aggregate()
+        aggregate_name = self.cell + data_utils.rand_name(
+            self.aggregate_name_prefix)
+        aggregate = self._create_test_aggregate(name=aggregate_name)
         body = self.client.show_aggregate(aggregate['id'])['aggregate']
         self.assertEqual(aggregate['name'], body['name'])
         self.assertEqual(aggregate['availability_zone'],
@@ -119,7 +131,8 @@ class AggregatesAdminTestJSON(base.BaseV2ComputeAdminTest):
     @decorators.idempotent_id('4d2b2004-40fa-40a1-aab2-66f4dab81beb')
     def test_aggregate_create_update_with_az(self):
         # Update an aggregate and ensure properties are updated correctly
-        aggregate_name = data_utils.rand_name(self.aggregate_name_prefix)
+        aggregate_name = self.cell + data_utils.rand_name(
+            self.aggregate_name_prefix)
         az_name = data_utils.rand_name(self.az_name_prefix)
         aggregate = self._create_test_aggregate(
             name=aggregate_name, availability_zone=az_name)
@@ -133,7 +146,7 @@ class AggregatesAdminTestJSON(base.BaseV2ComputeAdminTest):
 
         resp_aggregate = self.client.update_aggregate(
             aggregate_id,
-            name=new_aggregate_name,
+            name=new_aggregate_name.replace(self.cell, ''),
             availability_zone=new_az_name)['aggregate']
         self.assertEqual(new_aggregate_name, resp_aggregate['name'])
         self.assertEqual(new_az_name, resp_aggregate['availability_zone'])
@@ -148,9 +161,9 @@ class AggregatesAdminTestJSON(base.BaseV2ComputeAdminTest):
     def test_aggregate_add_remove_host(self):
         # Add a host to the given aggregate and remove.
         self.useFixture(fixtures.LockFixture('availability_zone'))
-        aggregate_name = data_utils.rand_name(self.aggregate_name_prefix)
+        aggregate_name = self.cell + data_utils.rand_name(
+            self.aggregate_name_prefix)
         aggregate = self._create_test_aggregate(name=aggregate_name)
-
         body = (self.client.add_host(aggregate['id'], host=self.host)
                 ['aggregate'])
         self.assertEqual(aggregate_name, body['name'])
@@ -169,9 +182,9 @@ class AggregatesAdminTestJSON(base.BaseV2ComputeAdminTest):
     def test_aggregate_add_host_list(self):
         # Add a host to the given aggregate and list.
         self.useFixture(fixtures.LockFixture('availability_zone'))
-        aggregate_name = data_utils.rand_name(self.aggregate_name_prefix)
+        aggregate_name = self.cell + data_utils.rand_name(
+            self.aggregate_name_prefix)
         aggregate = self._create_test_aggregate(name=aggregate_name)
-
         self.client.add_host(aggregate['id'], host=self.host)
         self.addCleanup(self.client.remove_host, aggregate['id'],
                         host=self.host)
@@ -188,9 +201,9 @@ class AggregatesAdminTestJSON(base.BaseV2ComputeAdminTest):
     def test_aggregate_add_host_get_details(self):
         # Add a host to the given aggregate and get details.
         self.useFixture(fixtures.LockFixture('availability_zone'))
-        aggregate_name = data_utils.rand_name(self.aggregate_name_prefix)
+        aggregate_name = self.cell + data_utils.rand_name(
+            self.aggregate_name_prefix)
         aggregate = self._create_test_aggregate(name=aggregate_name)
-
         self.client.add_host(aggregate['id'], host=self.host)
         self.addCleanup(self.client.remove_host, aggregate['id'],
                         host=self.host)
