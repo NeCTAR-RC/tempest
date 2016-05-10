@@ -23,8 +23,13 @@ aggregate_for_create = {
         'availability_zone': {'type': ['string', 'null']},
         'created_at': parameter_types.date_time,
         'deleted': {'type': 'boolean'},
-        'deleted_at': parameter_types.date_time_or_null,
-        'id': {'type': 'integer'},
+#<<<<<<< HEAD
+#        'deleted_at': parameter_types.date_time_or_null,
+#        'id': {'type': 'integer'},
+#=======
+        'deleted_at': {'type': ['string', 'null']},
+        'id': {'type': 'string'},
+#>>>>>>> 904456a... CellsV1: Support aggregate API with cells
         'name': {'type': 'string'},
         'updated_at': parameter_types.date_time_or_null
     },
