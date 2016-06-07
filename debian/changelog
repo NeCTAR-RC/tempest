@@ -1,0 +1,62 @@
+tempest (1:12.0.0-1) experimental; urgency=medium
+
+  [ Ondřej Nový ]
+  * Standards-Version is 3.9.8 now (no change)
+  * Added python-murano as build-depends to be able to generate the
+    tempest.conf options for it.
+  * d/rules: Removed UPSTREAM_GIT with default value
+  * d/copyright: Changed source URL to https protocol
+
+  [ Corey Bryant ]
+  * New upstream release.
+  * d/gbp.conf: Update branch to debian/newton.
+  * d/control: Align (Build-)Depends with upstream.
+  * d/changelog: Add epoch 1 to version to replace Ubuntu version 2014.1.*.
+
+  [ Thomas Goirand ]
+  * Added Corey Bryant <corey.bryant@canonical.com> as uploaders.
+
+ -- Thomas Goirand <zigo@debian.org>  Sun, 05 Jun 2016 22:42:33 +0000
+
+tempest (10.0.0-1) experimental; urgency=medium
+
+  [ Ondřej Nový ]
+  * Fixed VCS URLs (https).
+  * Also install tempest/api/orchestration/stacks/templates/*.json.
+
+  [ Thomas Goirand ]
+  * New upstream release.
+  * Fixed (build-)depends for this release.
+  * Added patch to remove the use of git in sphinx's conf.py.
+  * Added manila in namespace config.
+  * Generating tempest.conf with the namespace for the congress, manila,
+    mistral, murano (and therefore, build-depends on them).
+  * Fixed debian/copyright ordering.
+  * Standards-Version: 3.9.7 (no change).
+  * Do not copy tools/colorizer.py.
+  * Fix a few config option defaults.
+  * Also install missing .yaml files.
+
+ -- Thomas Goirand <zigo@debian.org>  Tue, 15 Mar 2016 13:10:03 +0100
+
+tempest (6-1) unstable; urgency=medium
+
+  * New upstream release.
+  * Fixed (build-)depends for this release.
+  * Generates config file using oslo-config-generator.
+  * Do not use verbose mode by default.
+
+ -- Thomas Goirand <zigo@debian.org>  Wed, 23 Sep 2015 09:32:43 +0200
+
+tempest (4-2) unstable; urgency=medium
+
+  * Makes build reproducible (Closes: #789749). Thanks to Juan Picca for the
+    bug report and patch.
+
+ -- Thomas Goirand <zigo@debian.org>  Fri, 26 Jun 2015 15:23:46 +0200
+
+tempest (4-1) unstable; urgency=medium
+
+  * Initial release (Closes: #750164).
+
+ -- Thomas Goirand <zigo@debian.org>  Mon, 04 May 2015 22:17:41 +0200

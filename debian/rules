@@ -1,0 +1,109 @@
+#!/usr/bin/make -f
+
+include /usr/share/openstack-pkg-tools/pkgos.make
+
+export OSLO_PACKAGE_VERSION=$(VERSION)
+
+LAST_CHANGE = $(shell dpkg-parsechangelog -S Date)
+BUILD_DATE  = $(shell LC_ALL=C date -u "+%B %d, %Y" -d "$(LAST_CHANGE)")
+
+%:
+	dh $@ --buildsystem=python_distutils --with python2,sphinxdoc
+
+override_dh_auto_clean:
+	dh_auto_clean -O--buildsystem=python_distutils
+	rm -f .testrepository
+
+override_dh_auto_install:
+	dh_auto_install -O--buildsystem=python_distutils
+	mkdir -p $(CURDIR)/debian/tempest/usr/lib/python2.7/dist-packages/tempest/api/orchestration/stacks/templates
+	cp tempest/api/orchestration/stacks/templates/*.yaml $(CURDIR)/debian/tempest/usr/lib/python2.7/dist-packages/tempest/api/orchestration/stacks/templates
+	cp tempest/api/orchestration/stacks/templates/*.json $(CURDIR)/debian/tempest/usr/lib/python2.7/dist-packages/tempest/api/orchestration/stacks/templates
+	mkdir -p $(CURDIR)/debian/tempest/etc/tempest
+	PYTHONPATH=$(CURDIR)/debian/tempest/usr/lib/python2.7/dist-packages oslo-config-generator --output-file $(CURDIR)/debian/tempest/etc/tempest/tempest.conf \
+		--wrap-width 140 \
+		--namespace tempest.config \
+		--namespace oslo.concurrency \
+		--namespace oslo.i18n \
+		--namespace oslo.log \
+		--namespace oslo.serialization \
+		--namespace oslo.utils
+	
+	install -D -m 0664 etc/logging.conf.sample $(CURDIR)/debian/tempest/etc/tempest/logging.conf
+	install -D -m 0664 etc/accounts.yaml.sample $(CURDIR)/debian/tempest/etc/tempest/accounts.yaml
+	install -D -m 0664 etc/whitelist.yaml $(CURDIR)/debian/tempest/etc/tempest/whitelist.yaml
+	install -D -m 0664 etc/javelin-resources.yaml.sample $(CURDIR)/debian/tempest/etc/tempest/javelin-resources.yaml
+
+	#cp -rfv etc/schemas $(CURDIR)/debian/tempest/etc/tempest
+#	cp tools/colorizer.py $(CURDIR)/debian/tempest/usr/lib/python2.7/dist-packages/tempest
+	# Fix-up some preferences
+
+	pkgos-fix-config-default $(CURDIR)/debian/tempest/etc/tempest/tempest.conf DEFAULT verbose false
+	pkgos-fix-config-default $(CURDIR)/debian/tempest/etc/tempest/tempest.conf DEFAULT log_file tempest.log
+	pkgos-fix-config-default $(CURDIR)/debian/tempest/etc/tempest/tempest.conf DEFAULT log_dir /var/log
+	pkgos-fix-config-default $(CURDIR)/debian/tempest/etc/tempest/tempest.conf DEFAULT log_file tempest.log
+
+	pkgos-fix-config-default $(CURDIR)/debian/tempest/etc/tempest/tempest.conf oslo_concurrency lock_path /var/lock
+
+	pkgos-fix-config-default $(CURDIR)/debian/tempest/etc/tempest/tempest.conf auth admin_tenant_name admin
+	pkgos-fix-config-default $(CURDIR)/debian/tempest/etc/tempest/tempest.conf auth admin_username admin
+	pkgos-fix-config-default $(CURDIR)/debian/tempest/etc/tempest/tempest.conf auth admin_domain_name default
+
+	pkgos-fix-config-default $(CURDIR)/debian/tempest/etc/tempest/tempest.conf compute fixed_network_name demo-net
+	pkgos-fix-config-default $(CURDIR)/debian/tempest/etc/tempest/tempest.conf compute region regionOne
+
+	pkgos-fix-config-default $(CURDIR)/debian/tempest/etc/tempest/tempest.conf compute-feature-enabled allow_duplicate_networks true
+	pkgos-fix-config-default $(CURDIR)/debian/tempest/etc/tempest/tempest.conf compute-feature-enabled spice_console true
+
+	pkgos-fix-config-default $(CURDIR)/debian/tempest/etc/tempest/tempest.conf dashboard dashboard_url http://127.0.0.1
+
+	pkgos-fix-config-default $(CURDIR)/debian/tempest/etc/tempest/tempest.conf identity uri http://127.0.0.1:35357/v2.0
+	pkgos-fix-config-default $(CURDIR)/debian/tempest/etc/tempest/tempest.conf identity v2_public_endpoint_type adminURL
+	pkgos-fix-config-default $(CURDIR)/debian/tempest/etc/tempest/tempest.conf identity uri_v3 http://127.0.0.1:35357/v3
+	pkgos-fix-config-default $(CURDIR)/debian/tempest/etc/tempest/tempest.conf identity disable_ssl_certificate_validation true
+	pkgos-fix-config-default $(CURDIR)/debian/tempest/etc/tempest/tempest.conf identity auth_version v3
+	pkgos-fix-config-default $(CURDIR)/debian/tempest/etc/tempest/tempest.conf identity default_domain_id default
+	pkgos-fix-config-default $(CURDIR)/debian/tempest/etc/tempest/tempest.conf identity region regionOne
+	pkgos-fix-config-default $(CURDIR)/debian/tempest/etc/tempest/tempest.conf identity v2_admin_endpoint_type adminURL
+
+	pkgos-fix-config-default $(CURDIR)/debian/tempest/etc/tempest/tempest.conf identity-feature-enabled api_v3 true
+	pkgos-fix-config-default $(CURDIR)/debian/tempest/etc/tempest/tempest.conf identity-feature-enabled api_v2 false
+
+	pkgos-fix-config-default $(CURDIR)/debian/tempest/etc/tempest/tempest.conf image region regionOne
+
+	pkgos-fix-config-default $(CURDIR)/debian/tempest/etc/tempest/tempest.conf network region regionOne
+	pkgos-fix-config-default $(CURDIR)/debian/tempest/etc/tempest/tempest.conf network build_interval 3
+
+	pkgos-fix-config-default $(CURDIR)/debian/tempest/etc/tempest/tempest.conf orchestration instance_type m1.small
+	pkgos-fix-config-default $(CURDIR)/debian/tempest/etc/tempest/tempest.conf orchestration region regionOne
+	pkgos-fix-config-default $(CURDIR)/debian/tempest/etc/tempest/tempest.conf orchestration region regionOne
+
+	pkgos-fix-config-default $(CURDIR)/debian/tempest/etc/tempest/tempest.conf volume region regionOne
+
+	# Package stuff in /var/lib/tempest, since we need read/write access
+	# to run the testr stuff
+	mkdir -p $(CURDIR)/debian/tempest/var/lib/tempest
+	ln -s /usr/lib/python2.7/dist-packages/tempest $(CURDIR)/debian/tempest/var/lib/tempest/tempest
+	cp .testr.conf $(CURDIR)/debian/tempest/var/lib/tempest
+	install -D -m 775 debian/tempest_shell_wrapper $(CURDIR)/debian/tempest/usr/bin/tempest_debian_shell_wrapper
+
+	rm -fr $(CURDIR)/debian/tempest/usr/etc
+
+override_dh_auto_test:
+ifeq (,$(findstring nocheck, $(DEB_BUILD_OPTIONS)))
+	rm -rf .testrepository
+	testr init
+	set -e && \
+		TEMP_REZ=`mktemp -t` && \
+		export OS_TEST_PATH=./tempest/tests && \
+		PYTHONPATH=$(CURDIR) testr run --parallel --subunit 'tests\.(?!.*test_pretty_tox.*)' | tee $$TEMP_REZ | subunit2pyunit || true ; \
+		cat $$TEMP_REZ | subunit-filter -s --no-passthrough | subunit-stats || true ; \
+		rm -f $$TEMP_REZ ;
+	testr slowest
+endif
+
+override_dh_sphinxdoc:
+ifeq (,$(findstring nodocs, $(DEB_BUILD_OPTIONS)))
+	PYTHONPATH=. sphinx-build -D html_last_updated_fmt="$(BUILD_DATE)" -b html doc/source $(CURDIR)/debian/tempest/usr/share/doc/tempest/html
+	dh_sphinxdoc -O--buildsystem=python_distutils
+endif
