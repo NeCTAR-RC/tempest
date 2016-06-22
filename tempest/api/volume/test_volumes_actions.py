@@ -144,3 +144,22 @@ class VolumesActionsTest(base.BaseVolumeTest):
             # to compare here.
             self.assertEqual(str(readonly),
                              fetched_volume['metadata']['readonly'])
+
+    @decorators.idempotent_id('bc8d5252-4fee-40ca-9e84-1821973e3267')
+    def test_volume_backup(self):
+        # Create backup
+        backup_name = data_utils.rand_name('Backup')
+        create_backup = self.backups_client.create_backup
+        backup = create_backup(volume_id=self.volume['id'],
+                               name=backup_name)['backup']
+        self.addCleanup(self.backups_client.delete_backup,
+                        backup['id'])
+        self.assertEqual(backup_name, backup['name'])
+        waiters.wait_for_volume_resource_status(self.volumes_client,
+                                                self.volume['id'], 'available')
+        waiters.wait_for_volume_resource_status(self.backups_client,
+                                                backup['id'], 'available')
+
+
+class VolumesV1ActionsTest(VolumesActionsTest):
+    _api_version = 1
