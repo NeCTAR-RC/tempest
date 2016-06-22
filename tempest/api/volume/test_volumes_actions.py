@@ -36,10 +36,10 @@ class VolumesV2ActionsTest(base.BaseVolumeTest):
     def resource_setup(cls):
         super(VolumesV2ActionsTest, cls).resource_setup()
         # Create a test shared instance
-        srv_name = data_utils.rand_name(cls.__name__ + '-Instance')
-        cls.server = cls.create_server(
-            name=srv_name,
-            wait_until='ACTIVE')
+        #srv_name = data_utils.rand_name(cls.__name__ + '-Instance')
+        #cls.server = cls.create_server(
+        #    name=srv_name,
+        #    wait_until='ACTIVE')
 
         # Create a test shared volume for attach/detach tests
         cls.volume = cls.create_volume()
@@ -49,9 +49,9 @@ class VolumesV2ActionsTest(base.BaseVolumeTest):
     @classmethod
     def resource_cleanup(cls):
         # Delete the test instance
-        cls.servers_client.delete_server(cls.server['id'])
-        waiters.wait_for_server_termination(cls.servers_client,
-                                            cls.server['id'])
+        #cls.servers_client.delete_server(cls.server['id'])
+        #waiters.wait_for_server_termination(cls.servers_client,
+        #                                    cls.server['id'])
 
         super(VolumesV2ActionsTest, cls).resource_cleanup()
 
@@ -173,6 +173,21 @@ class VolumesV2ActionsTest(base.BaseVolumeTest):
         fetched_volume = self.client.show_volume(self.volume['id'])['volume']
         bool_flag = self._is_true(fetched_volume['metadata']['readonly'])
         self.assertEqual(False, bool_flag)
+
+    @test.idempotent_id('bc8d5252-4fee-40ca-9e84-1821973e3267')
+    def test_volume_backup(self):
+        # Create backup
+        backup_name = data_utils.rand_name('Backup')
+        create_backup = self.backups_client.create_backup
+        backup = create_backup(volume_id=self.volume['id'],
+                               name=backup_name)['backup']
+        self.addCleanup(self.backups_client.delete_backup,
+                        backup['id'])
+        self.assertEqual(backup_name, backup['name'])
+        waiters.wait_for_volume_status(self.client,
+                                       self.volume['id'], 'available')
+        self.backups_client.wait_for_backup_status(backup['id'],
+                                                   'available')
 
 
 class VolumesV1ActionsTest(VolumesV2ActionsTest):
