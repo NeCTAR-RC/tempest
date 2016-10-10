@@ -54,6 +54,7 @@ class ScenarioTest(tempest.test.BaseTestCase):
             cls.image_client = cls.manager.image_client
         # Compute image client
         cls.compute_images_client = cls.manager.compute_images_client
+        cls.community_image_client = cls.manager.community_image_client
         cls.keypairs_client = cls.manager.keypairs_client
         # Nova security groups client
         cls.compute_security_groups_client = (
