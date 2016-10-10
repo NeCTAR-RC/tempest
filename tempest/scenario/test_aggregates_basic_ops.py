@@ -66,13 +66,14 @@ class TestAggregatesBasicOps(manager.ScenarioTest):
         return computes[0]['host_name']
 
     def _add_host(self, aggregate_id, host):
-        aggregate = (self.aggregates_client.add_host(aggregate_id, host=host.replace(self.cell,''))
-                     ['aggregate'])
+        aggregate = (self.aggregates_client.add_host(
+            aggregate_id, host=host.replace(self.cell, ''))['aggregate'])
         self.addCleanup(self._remove_host, aggregate['id'], host)
-        self.assertIn(host.replace(self.cell,''), aggregate['hosts'])
+        self.assertIn(host.replace(self.cell, ''), aggregate['hosts'])
 
     def _remove_host(self, aggregate_id, host):
-        aggregate = self.aggregates_client.remove_host(aggregate_id, host=host.replace(self.cell, ''))
+        aggregate = self.aggregates_client.remove_host(
+            aggregate_id, host=host.replace(self.cell, ''))
         self.assertNotIn(host, aggregate['aggregate']['hosts'])
 
     def _check_aggregate_details(self, aggregate, aggregate_name, azone,
@@ -81,7 +82,7 @@ class TestAggregatesBasicOps(manager.ScenarioTest):
                      ['aggregate'])
         self.assertEqual(aggregate_name, aggregate['name'])
         self.assertEqual(azone, aggregate['availability_zone'])
-        hosts = [host.replace(self.cell,'') for host in hosts]
+        hosts = [host.replace(self.cell, '') for host in hosts]
         self.assertEqual(hosts, aggregate['hosts'])
         for meta_key in metadata.keys():
             self.assertIn(meta_key, aggregate['metadata'])
