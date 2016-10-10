@@ -362,10 +362,10 @@ class BaseV2ComputeTest(api_version_utils.BaseMicroversionTest,
             return cls.validation_resources['floating_ip']['ip']
         elif CONF.validation.connect_method == 'fixed':
             if CONF.validation.network_for_ssh in server['addresses']:
-                addresses = server['addresses'][CONF.validation.network_for_ssh]
-                for address in addresses:
-                    if address['version'] == CONF.validation.ip_version_for_ssh:
-                        return address['addr']
+                addrs = server['addresses'][CONF.validation.network_for_ssh]
+                for addr in addrs:
+                    if addr['version'] == CONF.validation.ip_version_for_ssh:
+                        return addr['addr']
             else:
                 access = 'accessIPv%d' % CONF.validation.ip_version_for_ssh
                 address = server.get(access)
