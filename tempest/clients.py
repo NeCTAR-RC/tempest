@@ -43,6 +43,8 @@ from tempest.lib.services.compute.hypervisor_client import \
     HypervisorClient
 from tempest.lib.services.compute.images_client import ImagesClient \
     as ComputeImagesClient
+from tempest.lib.services.compute.community_image_client import CommunityImagesClient \
+    as CommunityImagesClient
 from tempest.lib.services.compute.instance_usage_audit_log_client import \
     InstanceUsagesAuditLogClient
 from tempest.lib.services.compute.interfaces_client import InterfacesClient
@@ -340,6 +342,12 @@ class Manager(manager.Manager):
                 build_interval=CONF.image.build_interval,
                 build_timeout=CONF.image.build_timeout,
                 **self.default_params)
+        self.community_image_client = CommunityImagesClient(
+            self.auth_provider,
+            CONF.image.catalog_type,
+            CONF.image.region or CONF.identity.region,
+            endpoint_type=CONF.image.endpoint_type,
+            **self.default_params)
         self.orchestration_client = OrchestrationClient(
             self.auth_provider,
             CONF.orchestration.catalog_type,
