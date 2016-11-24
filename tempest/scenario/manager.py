@@ -652,10 +652,18 @@ class ScenarioTest(tempest.test.BaseTestCase):
             # method is creating the floating IP there.
             return self.create_floating_ip(server)['ip']
         elif CONF.validation.connect_method == 'fixed':
-            addresses = server['addresses'][CONF.validation.network_for_ssh]
-            for address in addresses:
-                if address['version'] == CONF.validation.ip_version_for_ssh:
-                    return address['addr']
+            if CONF.validation.network_for_ssh in server['addresses']:
+                addresses =\
+                    server['addresses'][CONF.validation.network_for_ssh]
+                for address in addresses:
+                    if address['version'] ==\
+                            CONF.validation.ip_version_for_ssh:
+                        return address['addr']
+            else:
+                access = 'accessIPv%d' % CONF.validation.ip_version_for_ssh
+                address = server.get(access)
+                if address:
+                    return address
             raise exceptions.ServerUnreachable()
         else:
             raise exceptions.InvalidConfiguration()
@@ -1268,7 +1276,7 @@ class BaremetalScenarioTest(ScenarioTest):
             return False
 
         if not tempest.test.call_until_true(
-            check_state, timeout, interval):
+                check_state, timeout, interval):
             msg = ("Timed out waiting for node %s to reach %s state(s) %s" %
                    (node_id, state_attr, target_states))
             raise exceptions.TimeoutException(msg)
