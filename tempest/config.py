@@ -343,6 +343,9 @@ ComputeGroup = [
                     "If both values are not specified, Tempest avoids tests "
                     "which require a microversion. Valid values are string "
                     "with format 'X.Y' or string 'latest'"),
+    cfg.StrOpt('availability_zone',
+               default=None,
+               help="Availability zone to be used in tests."),
 ]
 
 compute_features_group = cfg.OptGroup(name='compute-feature-enabled',
