@@ -792,6 +792,9 @@ VolumeGroup = [
                     "If both values are not specified, Tempest avoids tests "
                     "which require a microversion. Valid values are string "
                     "with format 'X.Y' or string 'latest'",),
+    cfg.StrOpt('availability_zone',
+               help="Availability zone to be used in tests. "
+               "This is a required option"),
 ]
 
 volume_feature_group = cfg.OptGroup(name='volume-feature-enabled',

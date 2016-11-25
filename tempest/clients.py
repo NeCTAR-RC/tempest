@@ -140,7 +140,8 @@ class Manager(clients.ServiceClients):
         # the API is a proxy for the other component.
         params_volume = {
             'build_interval': CONF.volume.build_interval,
-            'build_timeout': CONF.volume.build_timeout
+            'build_timeout': CONF.volume.build_timeout,
+            'availability_zone': CONF.volume.availability_zone
         }
         self.volumes_extensions_client = self.compute.VolumesClient(
             **params_volume)
@@ -243,9 +244,13 @@ class Manager(clients.ServiceClients):
         self.snapshots_client = self.volume_v1.SnapshotsClient()
         self.snapshots_v2_client = self.volume_v2.SnapshotsClient()
         self.volume_manage_v2_client = self.volume_v2.VolumeManageClient()
-        self.volumes_client = self.volume_v1.VolumesClient()
-        self.volumes_v2_client = self.volume_v2.VolumesClient()
-        self.volumes_v3_client = self.volume_v3.VolumesClient()
+        params_volume = {
+            'availability_zone': CONF.volume.availability_zone
+        }
+
+        self.volumes_client = self.volume_v1.VolumesClient(**params_volume)
+        self.volumes_v2_client = self.volume_v2.VolumesClient(**params_volume)
+        self.volumes_v3_client = self.volume_v3.VolumesClient(**params_volume)
         self.volume_v3_messages_client = self.volume_v3.MessagesClient()
         self.volume_v3_versions_client = self.volume_v3.VersionsClient()
         self.volume_types_client = self.volume_v1.TypesClient()
