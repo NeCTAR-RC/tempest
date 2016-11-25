@@ -108,7 +108,8 @@ class Manager(clients.ServiceClients):
         self.certificates_client = self.compute.CertificatesClient()
         eip = CONF.compute_feature_enabled.enable_instance_password
         self.servers_client = self.compute.ServersClient(
-            enable_instance_password=eip)
+            enable_instance_password=eip,
+            availability_zone=CONF.compute.availability_zone)
         self.server_groups_client = self.compute.ServerGroupsClient()
         self.limits_client = self.compute.LimitsClient()
         self.compute_images_client = self.compute.ImagesClient()
