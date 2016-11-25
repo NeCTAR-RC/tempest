@@ -376,6 +376,9 @@ ComputeGroup = [
                     'allow_availability_zone_fallback=False in cinder.conf), '
                     'the volume create request will fail and the instance '
                     'will fail the build request.'),
+    cfg.StrOpt('availability_zone',
+               default=None,
+               help="Availability zone to be used in tests."),
 ]
 
 placement_group = cfg.OptGroup(name='placement',
