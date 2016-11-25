@@ -65,6 +65,8 @@ class VolumesClient(rest_client.RestClient):
         API reference:
         http://developer.openstack.org/api-ref/block-storage/v1/#create-volume
         """
+        if 'availability_zone' not in kwargs:
+            kwargs['availability_zone'] = self.availability_zone
         post_body = json.dumps({'volume': kwargs})
         resp, body = self.post('volumes', post_body)
         body = json.loads(body)
