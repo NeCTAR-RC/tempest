@@ -84,7 +84,9 @@ class RestClient(object):
                  build_interval=1, build_timeout=60,
                  disable_ssl_certificate_validation=False, ca_certs=None,
                  trace_requests='', name=None, http_timeout=None,
-                 proxy_url=None, follow_redirects=True):
+                 proxy_url=None, follow_redirects=True,
+                 availability_zone=None):
+
         self.auth_provider = auth_provider
         self.service = service
         self.region = region
@@ -93,6 +95,7 @@ class RestClient(object):
         self.build_interval = build_interval
         self.build_timeout = build_timeout
         self.trace_requests = trace_requests
+        self.availability_zone = availability_zone
 
         self._skip_path = False
         self.general_header_lc = set(('cache-control', 'connection',
