@@ -128,7 +128,8 @@ class Manager(clients.ServiceClients):
         # the API is a proxy for the other component.
         params_volume = {
             'build_interval': CONF.volume.build_interval,
-            'build_timeout': CONF.volume.build_timeout
+            'build_timeout': CONF.volume.build_timeout,
+            'availability_zone': CONF.volume.availability_zone
         }
         self.volumes_extensions_client = self.compute.VolumesClient(
             **params_volume)
@@ -218,6 +219,9 @@ class Manager(clients.ServiceClients):
 
     def _set_volume_clients(self):
 
+        params_volume = {
+            'availability_zone': CONF.volume.availability_zone
+        }
         if CONF.volume_feature_enabled.api_v1:
             self.backups_client = self.volume_v1.BackupsClient()
             self.encryption_types_client = \
@@ -231,7 +235,7 @@ class Manager(clients.ServiceClients):
             self.volume_quotas_client = self.volume_v1.QuotasClient()
             self.volume_services_client = self.volume_v1.ServicesClient()
             self.volume_types_client = self.volume_v1.TypesClient()
-            self.volumes_client = self.volume_v1.VolumesClient()
+            self.volumes_client = self.volume_v1.VolumesClient(**params_volume)
             self.volumes_extension_client = self.volume_v1.ExtensionsClient()
 
         if CONF.volume_feature_enabled.api_v2:
@@ -258,7 +262,8 @@ class Manager(clients.ServiceClients):
             self.volume_v2_availability_zone_client = \
                 self.volume_v2.AvailabilityZoneClient()
             self.volume_v2_limits_client = self.volume_v2.LimitsClient()
-            self.volumes_v2_client = self.volume_v2.VolumesClient()
+            self.volumes_v2_client = self.volume_v2.VolumesClient(
+                **params_volume)
             self.volumes_v2_extension_client = \
                 self.volume_v2.ExtensionsClient()
 
@@ -275,7 +280,8 @@ class Manager(clients.ServiceClients):
             self.snapshots_v3_client = self.volume_v3.SnapshotsClient()
             self.volume_v3_messages_client = self.volume_v3.MessagesClient()
             self.volume_v3_versions_client = self.volume_v3.VersionsClient()
-            self.volumes_v3_client = self.volume_v3.VolumesClient()
+            self.volumes_v3_client = self.volume_v3.VolumesClient(
+                **params_volume)
 
             # Set default client for users that don't need explicit version
             self.volumes_client_latest = self.volumes_v3_client
