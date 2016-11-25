@@ -64,6 +64,8 @@ class VolumesClient(base_compute_client.BaseComputeClient):
         API reference:
         https://developer.openstack.org/api-ref/compute/#create-volume
         """
+        if 'availability_zone' not in kwargs:
+            kwargs['availability_zone'] = self.availability_zone
         post_body = json.dumps({'volume': kwargs})
         resp, body = self.post('os-volumes', post_body)
         body = json.loads(body)
