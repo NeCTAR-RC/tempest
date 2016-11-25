@@ -66,6 +66,8 @@ class BaseVolumesClient(rest_client.RestClient):
         Available params: see http://developer.openstack.org/
                               api-ref-blockstorage-v2.html#createVolume
         """
+        if 'availability_zone' not in kwargs:
+            kwargs['availability_zone'] = self.availability_zone
         post_body = json.dumps({'volume': kwargs})
         resp, body = self.post('volumes', post_body)
         body = json.loads(body)

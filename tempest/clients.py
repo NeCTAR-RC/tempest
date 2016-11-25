@@ -191,6 +191,7 @@ class Manager(clients.ServiceClients):
         # NOTE: The following client needs special timeout values because
         # the API is a proxy for the other component.
         params_volume = {}
+        params_volume['availability_zone'] = CONF.volume.availability_zone
         for _key in ('build_interval', 'build_timeout'):
             _value = self.parameters['volume'].get(_key)
             if _value:
@@ -286,7 +287,7 @@ class Manager(clients.ServiceClients):
     def _set_volume_clients(self):
         # Mandatory parameters (always defined)
         params = self.parameters['volume']
-
+        params['availability_zone'] = CONF.volume.availability_zone
         self.volume_qos_client = volume.v1.QosSpecsClient(self.auth_provider,
                                                           **params)
         self.volume_qos_v2_client = volume.v2.QosSpecsClient(
