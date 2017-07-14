@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1ae5cdf2_136512e1",
+        "filename": "tempest/clients.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 271,
+      "author": {
+        "id": 1000104
+      },
+      "writtenOn": "2017-07-14T01:23:59Z",
+      "side": 1,
+      "message": "let\u0027s remove this?",
+      "range": {
+        "startLine": 268,
+        "startChar": 7,
+        "endLine": 271,
+        "endChar": 9
+      },
+      "revId": "9110fef14a7f324abf288ee8e8d6c107a41247d7",
+      "serverId": "f182a8af-62ca-4ceb-ab81-14f8fec9c6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1ae5cdf2_33620ed9",
+        "filename": "tempest/lib/services/volume/v2/volumes_client.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1000104
+      },
+      "writtenOn": "2017-07-14T01:23:59Z",
+      "side": 1,
+      "message": "shall we remove this, for consistency? we don\u0027t need this because we should always provide AZ in the config file.",
+      "range": {
+        "startLine": 107,
+        "startChar": 45,
+        "endLine": 107,
+        "endChar": 71
+      },
+      "revId": "9110fef14a7f324abf288ee8e8d6c107a41247d7",
+      "serverId": "f182a8af-62ca-4ceb-ab81-14f8fec9c6c5",
+      "unresolved": false
+    }
+  ]
+}
