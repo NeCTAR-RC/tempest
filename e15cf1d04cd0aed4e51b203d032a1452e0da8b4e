@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1ae5cdf2_d3f80ae8",
+        "filename": "tempest/api/compute/admin/test_aggregates_negative.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 185,
+      "author": {
+        "id": 1000104
+      },
+      "writtenOn": "2017-07-14T04:37:45Z",
+      "side": 1,
+      "message": "probably don\u0027t need this anymore?",
+      "range": {
+        "startLine": 185,
+        "startChar": 8,
+        "endLine": 185,
+        "endChar": 64
+      },
+      "revId": "e15cf1d04cd0aed4e51b203d032a1452e0da8b4e",
+      "serverId": "f182a8af-62ca-4ceb-ab81-14f8fec9c6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1ae5cdf2_f3dc2677",
+        "filename": "tempest/lib/api_schema/response/compute/v2_1/aggregates.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1000104
+      },
+      "writtenOn": "2017-07-14T04:37:45Z",
+      "side": 1,
+      "message": "I think this is old code? should not need to change this.",
+      "range": {
+        "startLine": 26,
+        "startChar": 22,
+        "endLine": 26,
+        "endChar": 50
+      },
+      "revId": "e15cf1d04cd0aed4e51b203d032a1452e0da8b4e",
+      "serverId": "f182a8af-62ca-4ceb-ab81-14f8fec9c6c5",
+      "unresolved": false
+    }
+  ]
+}
