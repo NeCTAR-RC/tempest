@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1ae5cdf2_93ee8221",
+        "filename": "tempest/clients.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 273,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2017-07-14T01:59:12Z",
+      "side": 1,
+      "message": "these can go, not needed",
+      "range": {
+        "startLine": 268,
+        "startChar": 0,
+        "endLine": 273,
+        "endChar": 28
+      },
+      "revId": "d9a9b035629910cd3e15e52c687d841f0a539ca8",
+      "serverId": "f182a8af-62ca-4ceb-ab81-14f8fec9c6c5",
+      "unresolved": false
+    }
+  ]
+}
