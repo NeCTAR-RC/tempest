@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1ae5cdf2_53b6ba3e",
+        "filename": "tempest/config.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 335,
+      "author": {
+        "id": 1000104
+      },
+      "writtenOn": "2017-07-14T01:40:41Z",
+      "side": 1,
+      "message": "please remove this, not part of this patch",
+      "range": {
+        "startLine": 335,
+        "startChar": 20,
+        "endLine": 335,
+        "endChar": 61
+      },
+      "revId": "e7cf7509a3becbf867ed668612ca6997409ef4a2",
+      "serverId": "f182a8af-62ca-4ceb-ab81-14f8fec9c6c5",
+      "unresolved": false
+    }
+  ]
+}
