@@ -117,7 +117,8 @@ class TestNetworkBasicOps(manager.NetworkScenarioTest):
             self.ports.append({'port': port_id})
 
         server = self._create_server(self.network, port_id)
-        self._check_tenant_network_connectivity()
+        # Bypass below, since tenant network should not be accessible
+        # self._check_tenant_network_connectivity()
 
         floating_ip = self.create_floating_ip(server)
         self.floating_ip_tuple = Floating_IP_tuple(floating_ip, server)
@@ -128,21 +129,21 @@ class TestNetworkBasicOps(manager.NetworkScenarioTest):
         via checking the result of list_[networks,routers,subnets]
         """
 
-        seen_nets = self.os_admin.networks_client.list_networks()
+        seen_nets = self.os_primary.networks_client.list_networks()
         seen_names = [n['name'] for n in seen_nets['networks']]
         seen_ids = [n['id'] for n in seen_nets['networks']]
         self.assertIn(self.network['name'], seen_names)
         self.assertIn(self.network['id'], seen_ids)
 
         if self.subnet:
-            seen_subnets = self.os_admin.subnets_client.list_subnets()
+            seen_subnets = self.os_primary.subnets_client.list_subnets()
             seen_net_ids = [n['network_id'] for n in seen_subnets['subnets']]
             seen_subnet_ids = [n['id'] for n in seen_subnets['subnets']]
             self.assertIn(self.network['id'], seen_net_ids)
             self.assertIn(self.subnet['id'], seen_subnet_ids)
 
         if self.router:
-            seen_routers = self.os_admin.routers_client.list_routers()
+            seen_routers = self.os_primary.routers_client.list_routers()
             seen_router_ids = [n['id'] for n in seen_routers['routers']]
             seen_router_names = [n['name'] for n in seen_routers['routers']]
             self.assertIn(self.router['name'],
@@ -243,7 +244,7 @@ class TestNetworkBasicOps(manager.NetworkScenarioTest):
             ip_address, private_key=private_key, server=server)
         old_nic_list = self._get_server_nics(ssh_client)
         # get a port from a list of one item
-        port_list = self.os_admin.ports_client.list_ports(
+        port_list = self.os_primary.ports_client.list_ports(
             device_id=server['id'])['ports']
         self.assertEqual(1, len(port_list))
         old_port = port_list[0]
@@ -259,7 +260,7 @@ class TestNetworkBasicOps(manager.NetworkScenarioTest):
         def check_ports():
             self.new_port_list = [
                 port for port in
-                self.os_admin.ports_client.list_ports(
+                self.os_primary.ports_client.list_ports(
                     device_id=server['id'])['ports']
                 if port['id'] != old_port['id']
             ]
@@ -311,7 +312,7 @@ class TestNetworkBasicOps(manager.NetworkScenarioTest):
         # get all network ports in the new network
         internal_ips = (
             p['fixed_ips'][0]['ip_address'] for p in
-            self.os_admin.ports_client.list_ports(
+            self.os_primary.ports_client.list_ports(
                 tenant_id=server['tenant_id'],
                 network_id=network['id'])['ports']
             if p['device_owner'].startswith('network')
@@ -332,7 +333,7 @@ class TestNetworkBasicOps(manager.NetworkScenarioTest):
         # which is always IPv4, so we must only test connectivity to
         # external IPv4 IPs if the external network is dualstack.
         v4_subnets = [
-            s for s in self.os_admin.subnets_client.list_subnets(
+            s for s in self.os_primary.subnets_client.list_subnets(
                 network_id=CONF.network.public_network_id)['subnets']
             if s['ip_version'] == 4
         ]
@@ -633,7 +634,7 @@ class TestNetworkBasicOps(manager.NetworkScenarioTest):
         self._setup_network_and_servers()
         _, server = self.floating_ip_tuple
         server_id = server['id']
-        port_id = self.os_admin.ports_client.list_ports(
+        port_id = self.os_primary.ports_client.list_ports(
             device_id=server_id)['ports'][0]['id']
         server_pip = server['addresses'][self.network['name']][0]['addr']
 
@@ -689,7 +690,7 @@ class TestNetworkBasicOps(manager.NetworkScenarioTest):
                              'Server should have been created from a '
                              'pre-existing port.')
         # Assert the port is bound to the server.
-        port_list = self.os_admin.ports_client.list_ports(
+        port_list = self.os_primary.ports_client.list_ports(
             device_id=server['id'], network_id=self.network['id'])['ports']
         self.assertEqual(1, len(port_list),
                          'There should only be one port created for '
@@ -708,7 +709,7 @@ class TestNetworkBasicOps(manager.NetworkScenarioTest):
         # Boot another server with the same port to make sure nothing was
         # left around that could cause issues.
         server = self._create_server(self.network, port['id'])
-        port_list = self.os_admin.ports_client.list_ports(
+        port_list = self.os_primary.ports_client.list_ports(
             device_id=server['id'], network_id=self.network['id'])['ports']
         self.assertEqual(1, len(port_list),
                          'There should only be one port created for '
@@ -733,23 +734,23 @@ class TestNetworkBasicOps(manager.NetworkScenarioTest):
         # TODO(yfried): refactor this test to be used for other agents (dhcp)
         # as well
 
-        list_hosts = (self.os_admin.routers_client.
+        list_hosts = (self.os_primary.routers_client.
                       list_l3_agents_hosting_router)
-        schedule_router = (self.os_admin.network_agents_client.
+        schedule_router = (self.os_primary.network_agents_client.
                            create_router_on_l3_agent)
-        unschedule_router = (self.os_admin.network_agents_client.
+        unschedule_router = (self.os_primary.network_agents_client.
                              delete_router_from_l3_agent)
 
         agent_list_alive = set(
             a["id"] for a in
-            self.os_admin.network_agents_client.list_agents(
+            self.os_primary.network_agents_client.list_agents(
                 agent_type="L3 agent")['agents'] if a["alive"] is True
         )
         self._setup_network_and_servers()
 
         # NOTE(kevinbenton): we have to use the admin credentials to check
         # for the distributed flag because self.router only has a project view.
-        admin = self.os_admin.routers_client.show_router(
+        admin = self.os_primary.routers_client.show_router(
             self.router['id'])
         if admin['router'].get('distributed', False):
             msg = "Rescheduling test does not apply to distributed routers."
@@ -827,7 +828,7 @@ class TestNetworkBasicOps(manager.NetworkScenarioTest):
         self._create_new_network()
         self._hotplug_server()
         fip, server = self.floating_ip_tuple
-        new_ports = self.os_admin.ports_client.list_ports(
+        new_ports = self.os_primary.ports_client.list_ports(
             device_id=server["id"], network_id=self.new_net["id"])['ports']
         spoof_port = new_ports[0]
         private_key = self._get_server_key(server)
