@@ -273,7 +273,7 @@ def wait_for_interface_status(client, server_id, port_id, status):
     interface_status = body['port_state']
     start = int(time.time())
 
-    while(interface_status != status):
+    while(interface_status not in status):
         time.sleep(client.build_interval)
         body = (client.show_interface(server_id, port_id)
                 ['interfaceAttachment'])
@@ -281,7 +281,7 @@ def wait_for_interface_status(client, server_id, port_id, status):
 
         timed_out = int(time.time()) - start >= client.build_timeout
 
-        if interface_status != status and timed_out:
+        if interface_status not in status and timed_out:
             message = ('Interface %s failed to reach %s status '
                        '(current %s) within the required time (%s s).' %
                        (port_id, status, interface_status,

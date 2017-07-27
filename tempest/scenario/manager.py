@@ -779,12 +779,17 @@ class NetworkScenarioTest(ScenarioTest):
         return subnet
 
     def _get_server_port_id_and_ip4(self, server, ip_addr=None):
+        p_status = ['ACTIVE', 'DOWN']
         ports = self.os_primary.ports_client.list_ports(
             device_id=server['id'], fixed_ip=ip_addr)['ports']
+        waiters.wait_for_interface_status(
+            self.interface_client, server['id'], ports[0]['id'], p_status)
+        ports = self.os_primary.ports_client.list_ports(
+            device_id=server['id'], fixed_ip=ip_addr)['ports']
+
         # A port can have more than one IP address in some cases.
         # If the network is dual-stack (IPv4 + IPv6), this port is associated
         # with 2 subnets
-        p_status = ['ACTIVE']
         # NOTE(vsaienko) With Ironic, instances live on separate hardware
         # servers. Neutron does not bind ports for Ironic instances, as a
         # result the port remains in the DOWN state.
