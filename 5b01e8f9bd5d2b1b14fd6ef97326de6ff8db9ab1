@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1ae5cdf2_7652bfde",
+        "filename": "tempest/scenario/manager.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 791,
+      "author": {
+        "id": 1000077
+      },
+      "writtenOn": "2017-07-30T23:46:34Z",
+      "side": 1,
+      "message": "whitespace",
+      "range": {
+        "startLine": 791,
+        "startChar": 78,
+        "endLine": 791,
+        "endChar": 79
+      },
+      "revId": "5b01e8f9bd5d2b1b14fd6ef97326de6ff8db9ab1",
+      "serverId": "f182a8af-62ca-4ceb-ab81-14f8fec9c6c5",
+      "unresolved": false
+    }
+  ]
+}
