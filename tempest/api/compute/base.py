@@ -521,4 +521,4 @@ class BaseV2ComputeAdminTest(BaseV2ComputeTest):
 
         for target_host in hosts:
             if source_host != target_host:
-                return target_host
+                return target_host.split('.')[0]
