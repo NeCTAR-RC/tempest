@@ -614,14 +614,24 @@ class BaseV2ComputeAdminTest(BaseV2ComputeTest):
         server_details = self.admin_servers_client.show_server(server_id)
         return server_details['server']['OS-EXT-SRV-ATTR:host']
 
+    def get_az_for_server(self, server_id):
+        server_details = self.admin_servers_client.show_server(server_id)
+        return server_details['server']['OS-EXT-AZ:availability_zone']
+
     def get_host_other_than(self, server_id):
         source_host = self.get_host_for_server(server_id)
+        az = self.get_az_for_server(server_id)
 
         svcs = self.os_admin.services_client.list_services(
             binary='nova-compute')['services']
         hosts = [svc['host'] for svc in svcs
-                 if svc['state'] == 'up' and svc['status'] == 'enabled']
+                 if svc['state'] == 'up' and svc['status'] == 'enabled'
+                 and svc['zone'] == az]
+
+        LOG.info("Source hosts is %s", source_host)
+        LOG.info("Host availability-zone is %s", az)
 
         for target_host in hosts:
+            target_host = target_host.split('@')[-1]
             if source_host != target_host:
-                return target_host
+                return target_host.split('@')[-1]
