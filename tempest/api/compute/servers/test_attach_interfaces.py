@@ -206,9 +206,6 @@ class AttachInterfacesTestJSON(base.BaseV2ComputeTest):
         iface = self._test_create_interface_by_port_id(server, ifs)
         ifs.append(iface)
 
-        iface = self._test_create_interface_by_fixed_ips(server, ifs)
-        ifs.append(iface)
-
         _ifs = (self.interfaces_client.list_interfaces(server['id'])
                 ['interfaceAttachments'])
         self._compare_iface_list(ifs, _ifs)
