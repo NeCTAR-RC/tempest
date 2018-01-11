@@ -13,9 +13,11 @@
 #    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #    License for the specific language governing permissions and limitations
 #    under the License.
+
 import collections
 import re
 
+import netaddr
 from oslo_log import log as logging
 import testtools
 
@@ -335,6 +337,8 @@ class TestNetworkBasicOps(manager.NetworkScenarioTest):
             LOG.info(msg)
             return
 
+        external_ips = None
+        floating_ip, server = self.floating_ip_tuple
         # We ping the external IP from the instance using its floating IP
         # which is always IPv4, so we must only test connectivity to
         # external IPv4 IPs if the external network is dualstack.
@@ -343,10 +347,18 @@ class TestNetworkBasicOps(manager.NetworkScenarioTest):
                 network_id=CONF.network.public_network_id)['subnets']
             if s['ip_version'] == 4
         ]
-        self.assertEqual(1, len(v4_subnets),
-                         "Found %d IPv4 subnets" % len(v4_subnets))
+        self.assertLessEqual(1, len(v4_subnets),
+                             "Found no public IPv4 subnets")
 
-        external_ips = [v4_subnets[0]['gateway_ip']]
+        for subnet in v4_subnets:
+            if(netaddr.IPAddress(floating_ip['floating_ip_address'])
+               in netaddr.IPNetwork(subnet['cidr'])):
+                external_ips = [subnet['gateway_ip']]
+                break
+        self.assertIsNotNone(external_ips,
+                             "no default gateway found for floating ip %s"
+                             % floating_ip)
+
         self._check_server_connectivity(self.floating_ip_tuple.floating_ip,
                                         external_ips)
 
