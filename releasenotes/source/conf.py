@@ -27,6 +27,7 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 # sys.path.insert(0, os.path.abspath('.'))
+from tempest.version import version_info as tempest_version
 
 # -- General configuration ------------------------------------------------
 
@@ -70,7 +71,6 @@ copyright = u'2016, tempest Developers'
 # built documents.
 #
 # The short X.Y version.
-from tempest.version import version_info as tempest_version
 # The full version, including alpha/beta/rc tags.
 release = tempest_version.version_string_with_vcs()
 # The short X.Y version.

@@ -151,8 +151,8 @@ class NoVNCConsoleTestJSON(base.BaseV2ComputeTest):
         self.assertTrue(
             self._websocket.response.startswith(b'HTTP/1.1 101 Switching '
                                                 b'Protocols\r\n'),
-            'Did not get the expected 101 on the websockify call: '
-            + six.text_type(self._websocket.response))
+            'Did not get the expected 101 on the websockify call: ' +
+            six.text_type(self._websocket.response))
         self.assertTrue(
             self._websocket.response.find(b'Server: WebSockify') > 0,
             'Did not get the expected WebSocket HTTP Response.')
