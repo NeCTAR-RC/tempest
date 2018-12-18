@@ -21,6 +21,7 @@ from tempest.common.utils.linux import remote_client
 from tempest import config
 from tempest.lib.common.utils import data_utils
 from tempest.lib import decorators
+from testtools.content import text_content
 
 CONF = config.CONF
 
@@ -28,6 +29,10 @@ CONF = config.CONF
 class ServersTestJSON(base.BaseV2ComputeTest):
     disk_config = 'AUTO'
     volume_backed = False
+
+    def add_console_log(self):
+        output = self.client.get_console_output(self.server['id'])['output']
+        self.addDetail('console-log', text_content(output))
 
     @classmethod
     def setup_credentials(cls):
@@ -59,6 +64,11 @@ class ServersTestJSON(base.BaseV2ComputeTest):
             volume_backed=cls.volume_backed)
         cls.server = (cls.client.show_server(server_initial['id'])
                       ['server'])
+
+    # NOTE(jake): Nectar specific hooks to dump debug information on tearDown
+    def tearDown(self):
+        self.add_console_log()
+        super(ServersTestJSON, self).tearDown()
 
     @decorators.attr(type='smoke')
     @decorators.idempotent_id('5de47127-9977-400a-936f-abcfbec1218f')
