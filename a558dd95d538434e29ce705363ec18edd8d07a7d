@@ -22,6 +22,30 @@
       "revId": "a558dd95d538434e29ce705363ec18edd8d07a7d",
       "serverId": "f182a8af-62ca-4ceb-ab81-14f8fec9c6c5",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "279d500e_989e91a0",
+        "filename": "tempest/api/compute/servers/test_create_server.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1000104
+      },
+      "writtenOn": "2018-12-23T23:39:51Z",
+      "side": 1,
+      "message": "oops, definitely not!",
+      "parentUuid": "1a633c8a_b5485085",
+      "range": {
+        "startLine": 137,
+        "startChar": 8,
+        "endLine": 137,
+        "endChar": 27
+      },
+      "revId": "a558dd95d538434e29ce705363ec18edd8d07a7d",
+      "serverId": "f182a8af-62ca-4ceb-ab81-14f8fec9c6c5",
+      "unresolved": false
     }
   ]
 }
