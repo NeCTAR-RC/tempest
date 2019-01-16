@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f51100ba_780ac3b3",
+        "filename": "tempest/api/compute/servers/test_create_server.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2019-01-16T04:45:43Z",
+      "side": 1,
+      "message": "ideally this import should be with the other testtools import",
+      "range": {
+        "startLine": 24,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 42
+      },
+      "revId": "953be1f9e270f1cd770459fd2d6bd6c11904a703",
+      "serverId": "f182a8af-62ca-4ceb-ab81-14f8fec9c6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a52ac863_a102c2e9",
+        "filename": "tempest/api/compute/servers/test_create_server.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2019-01-16T04:45:43Z",
+      "side": 1,
+      "message": "should there be some exception handling around this in case the instance doesn\u0027t exist?",
+      "range": {
+        "startLine": 34,
+        "startChar": 8,
+        "endLine": 34,
+        "endChar": 76
+      },
+      "revId": "953be1f9e270f1cd770459fd2d6bd6c11904a703",
+      "serverId": "f182a8af-62ca-4ceb-ab81-14f8fec9c6c5",
+      "unresolved": false
+    }
+  ]
+}
