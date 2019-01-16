@@ -45,6 +45,30 @@
       "revId": "953be1f9e270f1cd770459fd2d6bd6c11904a703",
       "serverId": "f182a8af-62ca-4ceb-ab81-14f8fec9c6c5",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0a1f01b8_73935a75",
+        "filename": "tempest/api/compute/servers/test_create_server.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1000104
+      },
+      "writtenOn": "2019-01-16T05:08:34Z",
+      "side": 1,
+      "message": "@sorrison I think we did it that way because tearDown will only run if resource_setup is successful [1], so I assume server exists.\n\n[1] https://docs.openstack.org/tempest/latest/HACKING.html#test-fixtures-and-resources",
+      "parentUuid": "a52ac863_a102c2e9",
+      "range": {
+        "startLine": 34,
+        "startChar": 8,
+        "endLine": 34,
+        "endChar": 76
+      },
+      "revId": "953be1f9e270f1cd770459fd2d6bd6c11904a703",
+      "serverId": "f182a8af-62ca-4ceb-ab81-14f8fec9c6c5",
+      "unresolved": false
     }
   ]
 }
