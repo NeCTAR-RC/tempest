@@ -423,9 +423,7 @@ class TestNetworkBasicOps(manager.NetworkScenarioTest):
         self._setup_network_and_servers()
         self._check_public_network_connectivity(should_connect=True)
         self._check_network_internal_connectivity(network=self.network)
-        # cannot check the external gateway, since we are using the non-admin
-        # credentials and the floating network should be Shared=False.
-        # self._check_network_external_connectivity()
+        self._check_network_external_connectivity()
         self._disassociate_floating_ips()
         self._check_public_network_connectivity(should_connect=False,
                                                 msg="after disassociate "
