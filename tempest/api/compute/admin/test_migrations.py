@@ -26,6 +26,8 @@ CONF = config.CONF
 
 class MigrationsAdminTest(base.BaseV2ComputeAdminTest):
     """Test migration operations supported by admin user"""
+    min_microversion = '2.56'
+    max_microversion = 'latest'
 
     @classmethod
     def setup_clients(cls):
@@ -141,7 +143,9 @@ class MigrationsAdminTest(base.BaseV2ComputeAdminTest):
         server = self.create_test_server(wait_until="ACTIVE")
         src_host = self.get_host_for_server(server['id'])
 
-        self.admin_servers_client.migrate_server(server['id'])
+        target_host = CONF.compute.target_host
+        self.admin_servers_client.migrate_server(server['id'],
+                                                 host=target_host)
 
         waiters.wait_for_server_status(self.servers_client,
                                        server['id'], 'VERIFY_RESIZE')
@@ -157,6 +161,8 @@ class MigrationsAdminTest(base.BaseV2ComputeAdminTest):
                                        server['id'], 'ACTIVE')
         dst_host = self.get_host_for_server(server['id'])
         assert_func(src_host, dst_host)
+        if target_host:
+            self.assertEqual(dst_host, target_host)
 
     @decorators.idempotent_id('4bf0be52-3b6f-4746-9a27-3143636fe30d')
     @testtools.skipUnless(CONF.compute_feature_enabled.cold_migration,
