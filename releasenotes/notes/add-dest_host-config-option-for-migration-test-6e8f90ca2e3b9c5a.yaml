@@ -1,0 +1,6 @@
+---
+features:
+  - |
+    New string configuration option ``target_host`` is added to ``compute``
+    section. It provides the ability to specify the target host used by
+    migration related tests.

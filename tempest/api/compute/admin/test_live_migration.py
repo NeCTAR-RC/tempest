@@ -123,7 +123,8 @@ class LiveMigrationTest(LiveMigrationTestBase):
             # not to specify a host so that the scheduler will pick one
             destination_host = None
         else:
-            destination_host = self.get_host_other_than(server_id)
+            destination_host = CONF.compute.target_host or \
+                self.get_host_other_than(server_id)
 
         if state == 'PAUSED':
             self.admin_servers_client.pause_server(server_id)
