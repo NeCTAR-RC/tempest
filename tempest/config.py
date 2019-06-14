@@ -314,6 +314,14 @@ ComputeGroup = [
                      'be utilized by some multinode specific tests to ensure '
                      'that requests match the expected size of the cluster '
                      'you are testing with.')),
+    cfg.StrOpt('target_host',
+               default=None,
+               help=("The taget host used in migration tests. If empty, "
+                     "scheduler will decide which target host to migrate. "
+                     "In order to avoid the case that source and target "
+                     "host are the same one, use config "
+                     "availability_zone:host to specify the source host "
+                     "as well when this option is used")),
     cfg.StrOpt('hypervisor_type',
                default=None,
                help="Hypervisor type of the test target on heterogeneous "

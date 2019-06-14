@@ -106,7 +106,8 @@ class LiveMigrationTest(base.BaseV2ComputeAdminTest):
         server_id = self.create_test_server(wait_until="ACTIVE",
                                             volume_backed=volume_backed)['id']
         source_host = self.get_host_for_server(server_id)
-        destination_host = self.get_host_other_than(server_id)
+        destination_host = CONF.compute.target_host or \
+            self.get_host_other_than(server_id)
 
         if state == 'PAUSED':
             self.admin_servers_client.pause_server(server_id)
