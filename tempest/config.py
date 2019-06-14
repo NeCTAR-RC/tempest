@@ -314,6 +314,9 @@ ComputeGroup = [
                      'be utilized by some multinode specific tests to ensure '
                      'that requests match the expected size of the cluster '
                      'you are testing with.')),
+    cfg.StrOpt('dest_host',
+               default=None,
+               help=('The taget host in migration testing')),
     cfg.StrOpt('hypervisor_type',
                default=None,
                help="Hypervisor type of the test target on heterogeneous "
