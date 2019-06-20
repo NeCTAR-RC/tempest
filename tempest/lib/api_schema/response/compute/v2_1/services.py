@@ -25,7 +25,7 @@ list_services = {
                     'type': 'object',
                     'properties': {
                         'id': {'type': ['integer', 'string'],
-                               'pattern': '^[a-zA-Z_!]*@[0-9]+$'},
+                               'pattern': '^[0-9a-zA-Z_!-]*@[0-9]+$'},
                         'zone': {'type': 'string'},
                         'host': {'type': 'string'},
                         'state': {'type': 'string'},
