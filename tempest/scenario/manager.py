@@ -1274,16 +1274,16 @@ class ObjectStorageScenarioTest(ScenarioTest):
     def setup_credentials(cls):
         cls.set_network_resources()
         super(ObjectStorageScenarioTest, cls).setup_credentials()
-        operator_role = CONF.object_storage.operator_role
-        cls.os_operator = cls.get_client_manager(roles=[operator_role])
+        # operator_role = CONF.object_storage.operator_role
+        # cls.os_operator = cls.get_client_manager(roles=[operator_role])
 
     @classmethod
     def setup_clients(cls):
         super(ObjectStorageScenarioTest, cls).setup_clients()
         # Clients for Swift
-        cls.account_client = cls.os_operator.account_client
-        cls.container_client = cls.os_operator.container_client
-        cls.object_client = cls.os_operator.object_client
+        cls.account_client = cls.os_primary.account_client
+        cls.container_client = cls.os_primary.container_client
+        cls.object_client = cls.os_primary.object_client
 
     def get_swift_stat(self):
         """get swift status for our user account."""
