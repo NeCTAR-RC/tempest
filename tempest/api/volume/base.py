@@ -188,8 +188,7 @@ class BaseVolumeTest(api_version_utils.BaseMicroversionTest,
                                                 volume_id, 'in-use')
         self.addCleanup(waiters.wait_for_volume_resource_status,
                         self.volumes_client, volume_id, 'available')
-        self.addCleanup(self.servers_client.detach_volume, server_id,
-                        volume_id)
+        self.addCleanup(self.volumes_client.detach_volume, volume_id)
 
     def create_server(self, wait_until='ACTIVE', **kwargs):
         name = kwargs.pop(
