@@ -51,6 +51,16 @@ class ImagesTestJSON(base.BaseV2ComputeTest):
                .format(image_id=image['id']))
         self.assertTrue(self.client.is_resource_deleted(image['id']), msg)
 
+    @decorators.idempotent_id('6aa58645-a9e2-4af2-873c-270a1116775b')
+    def test_create_image_has_size(self):
+        server = self.create_test_server(wait_until='ACTIVE')
+        self.addCleanup(self.servers_client.delete_server, server['id'])
+        image = self.create_image_from_server(server['id'],
+                                              wait_until='ACTIVE')
+        image_info = self.images_client.show_image(image['id'])
+        self.addCleanup(self.client.delete_image, image['id'])
+        self.assertGreater(image_info['size'], 0)
+
     @decorators.idempotent_id('aaacd1d0-55a2-4ce8-818a-b5439df8adc9')
     def test_create_image_from_stopped_server(self):
         server = self.create_test_server(wait_until='ACTIVE')
