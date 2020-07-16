@@ -973,6 +973,17 @@ class NetworkScenarioTest(ScenarioTest):
         # A port can have more than one IP address in some cases.
         # If the network is dual-stack (IPv4 + IPv6), this port is associated
         # with 2 subnets
+        p_states = ['ACTIVE', 'DOWN']
+        waiters.wait_for_interface_status(
+            self.interface_client, server['id'], ports[0]['id'], p_states)
+
+        if ip_addr:
+            ports = self.os_primary.ports_client.list_ports(
+                device_id=server['id'],
+                fixed_ips='ip_address=%s' % ip_addr)['ports']
+        else:
+            ports = self.os_primary.ports_client.list_ports(
+                device_id=server['id'])['ports']
 
         def _is_active(port):
             # NOTE(vsaienko) With Ironic, instances live on separate hardware
@@ -980,7 +991,7 @@ class NetworkScenarioTest(ScenarioTest):
             # result the port remains in the DOWN state. This has been fixed
             # with the introduction of the networking-baremetal plugin but
             # it's not mandatory (and is not used on all stable branches).
-            return (port['status'] == 'ACTIVE' or
+            return (port['status'] in p_states or
                     port.get('binding:vnic_type') == 'baremetal')
 
         port_map = [(p["id"], fxip["ip_address"])
@@ -988,7 +999,8 @@ class NetworkScenarioTest(ScenarioTest):
                     for fxip in p["fixed_ips"]
                     if (netutils.is_valid_ipv4(fxip["ip_address"]) and
                         _is_active(p))]
-        inactive = [p for p in ports if p['status'] != 'ACTIVE']
+
+        inactive = [p for p in ports if p['status'] not in p_states]
         if inactive:
             LOG.warning("Instance has ports that are not ACTIVE: %s", inactive)
 
