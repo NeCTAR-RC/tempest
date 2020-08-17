@@ -353,7 +353,7 @@ class TestNetworkBasicOps(manager.NetworkScenarioTest):
                 "Found %d subnets. Specify subnet using configuration "
                 "option [network].subnet_id."
                 % len(v4_subnets))
-            subnet = self.os_admin.subnets_client.show_subnet(
+            subnet = self.os_primary.subnets_client.show_subnet(
                 CONF.network.subnet_id)['subnet']
             external_ips = [subnet['gateway_ip']]
         else:
