@@ -196,7 +196,9 @@ def create_test_server(clients, validatable=False, validation_resources=None,
         # to be specified.
         image_id = ''
 
-    if CONF.compute.compute_volume_common_az:
+    if CONF.compute.compute_volume_common_az and \
+       CONF.compute.compute_volume_common_az != \
+       CONF.compute.availability_zone.split(':')[0]:
         kwargs.setdefault('availability_zone',
                           CONF.compute.compute_volume_common_az)
     body = clients.servers_client.create_server(name=name, imageRef=image_id,
