@@ -274,7 +274,9 @@ class ScenarioTest(tempest.test.BaseTestCase):
 
         tenant_network = self.get_tenant_network()
 
-        if CONF.compute.compute_volume_common_az:
+        if CONF.compute.compute_volume_common_az and \
+           CONF.compute.compute_volume_common_az != \
+           CONF.compute.availability_zone.split(':')[0]:
             kwargs.setdefault('availability_zone',
                               CONF.compute.compute_volume_common_az)
 
