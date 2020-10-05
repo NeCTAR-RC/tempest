@@ -26,6 +26,8 @@ CONF = config.CONF
 
 class MigrationsAdminTest(base.BaseV2ComputeAdminTest):
     """Test migration operations supported by admin user"""
+    min_microversion = '2.56'
+    max_microversion = 'latest'
 
     @classmethod
     def setup_clients(cls):
