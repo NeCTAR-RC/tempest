@@ -391,25 +391,11 @@ class TestPreProvisionedCredentials(base.TestCase):
         admin_creds = test_accounts_class.get_admin_creds()
         self.assertIn('test_admin', admin_creds.username)
 
-    def test_get_admin_creds_by_type(self):
-        test_accounts = [
-            {'username': 'test_user10', 'project_name': 'test_tenant10',
-             'password': 'p', 'roles': ['role1', 'role2', 'role3', 'role4']},
-            {'username': 'test_admin1', 'tenant_name': 'test_tenant11',
-             'password': 'p', 'types': ['admin']}]
-        self.useFixture(fixtures.MockPatch(
-            'tempest.lib.common.preprov_creds.read_accounts_yaml',
-            return_value=test_accounts))
-        test_accounts_class = preprov_creds.PreProvisionedCredentialProvider(
-            **self.fixed_params)
-        admin_creds = test_accounts_class.get_admin_creds()
-        self.assertIn('test_admin', admin_creds.username)
-
     def test_get_admin_creds_by_role(self):
         test_accounts = [
             {'username': 'test_user10', 'project_name': 'test_tenant10',
              'password': 'p', 'roles': ['role1', 'role2', 'role3', 'role4']},
-            {'username': 'test_admin1', 'tenant_name': 'test_tenant11',
+            {'username': 'test_admin1', 'project_name': 'test_tenant11',
              'password': 'p', 'roles': [cfg.CONF.identity.admin_role]}]
         self.useFixture(fixtures.MockPatch(
             'tempest.lib.common.preprov_creds.read_accounts_yaml',
@@ -417,7 +403,7 @@ class TestPreProvisionedCredentials(base.TestCase):
         test_accounts_class = preprov_creds.PreProvisionedCredentialProvider(
             **self.fixed_params)
         admin_creds = test_accounts_class.get_admin_creds()
-        self.assertIn('test_admin', admin_creds.username)
+        self.assertIn('test_admin1', admin_creds.username)
 
     def test_get_admin_creds_none_available(self):
         non_admin_accounts = [x for x in self.test_accounts if 'test_admin'
@@ -475,6 +461,8 @@ class TestPreProvisionedCredentialsV3(TestPreProvisionedCredentials):
             {'username': 'test_user10', 'project_name': 'test_project10',
              'domain_name': 'domain', 'password': 'p',
              'roles': ['role1', 'role2', 'role3', 'role4']},
+            {'username': 'test_system_admin', 'system': True,
+             'domain_name': 'domain', 'password': 'p', 'roles': [admin_role]},
             {'username': 'test_admin1', 'project_name': 'test_project11',
              'domain_name': 'domain', 'password': 'p', 'roles': [admin_role]},
             {'username': 'test_admin2', 'project_name': 'test_project12',

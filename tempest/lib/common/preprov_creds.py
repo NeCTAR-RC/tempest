@@ -426,7 +426,7 @@ class PreProvisionedCredentialProvider(cred_provider.CredentialProvider):
     # TODO(gmann): Remove this method in favor of get_project_admin_creds()
     # after the deprecation phase.
     def get_admin_creds(self):
-        return self.get_creds_by_roles([self.admin_role])
+        return self.get_project_admin_creds()
 
     def is_role_available(self, role):
         if self.hash_dict['roles'].get(role):
