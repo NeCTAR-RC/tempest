@@ -36,9 +36,17 @@ class VolumesBackupsTest(base.BaseVolumeTest):
             raise cls.skipException("Cinder backup feature disabled")
 
     def restore_backup(self, backup_id):
+        # Nectarism: create target volume for restore and specify volume_id
+        # in backup_kwargs, otherwise tempest attempts to create a restore
+        # volume without specifying an availability zone which fails due to
+        # Nectar Cinder API requiring AZ param.
+        volume = self.create_volume()
+        backup_kwargs = {
+            'volume_id': volume['id'],
+        }
         # Restore a backup
         restored_volume = self.backups_client.restore_backup(
-            backup_id)['restore']
+            backup_id, **backup_kwargs)['restore']
 
         # Delete backup
         self.addCleanup(self.delete_volume, self.volumes_client,
