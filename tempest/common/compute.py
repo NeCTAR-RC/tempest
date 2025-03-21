@@ -83,6 +83,8 @@ def get_server_ip(server, validation_resources=None):
             address = server.get(access)
             if address:
                 return address
+            else:
+                addresses = list(server.get('addresses', {}).values())[0]
 
         for address in addresses:
             if address['version'] == CONF.validation.ip_version_for_ssh:
